@@ -54,6 +54,8 @@ las posibles asignaciones de variables
 \subsection{Correctitud}
 
 
+
+
 \subsection{Complejidad Temporal}
 
 
@@ -66,16 +68,61 @@ de las instancias $\alpha $ de $A$ y $\beta $ de $B$ son la misma, es decir la r
 la respuesta de $\beta $ es si. Este procedimiento de reducción polinomial es tan sencillo como tomar para cada instancia $\beta $ de 3-Sat
 y convertirla a $\alpha $, siendo $\alpha  = \lnot $. Si el algoritmo $f$ retorna $True$, es porque existe una asignación de variables
 para $\alpha $ tal que está es $False$, luego para esta misma asignación de variables $lnot \beta  = False$, por lo cual $\beta  = True$
-\section{Algoritmo Walk-Sat}
 
 
+\section{Utilización del algoritmo Walk-Sat}
+
+Walk-Sat es un algoritmo estocástico de búsqueda local(focused search) ...breve explicacion de xq usar walksat...
+
+Para llevar una instancia de nuestro problema a una instancia de Walk-Sat utilizamos la transformación de Tseitin, dado que esta
+nos permite llevar una expresión booleana a 3-CNF en tiempo polinomial y con un crecimiento de la fórmula polinomial con
+respecto al tamaño de la fórmula original.
 
 \subsection{Idea del algoritmo}
 
+Comienza asignando un valor aleatorio a cada variable de la fórmula. Si la asignación satisface todas las cláusulas, 
+el algoritmo termina devolviendo la asignación. De lo contrario, se invierte una variable seleccionada bajo un criterio de
+una cláusula insatisfecha elegida aleatoriamente y se repite lo anterior hasta que todas las cláusulas estén satisfechas. 
+El algoritmo puede utilizar diferentes criterios, puede seleccionar una variable de la cláusula de forma aleatoria, o bien 
+puede seguir un criterio greedy de los implementados para seleccionar la variable.
+
 \subsection{Criterios greedy}
+
+\subsubsection{Minimizar la insatisfacción de cláusula que ya estaban satisfechas.}
+
+Este criterio escoge la variable de la cláusula que aparezca menos veces como única variable que satisface una cláusula, dado que cambiar esta
+haría que menos cláusulas se insatisfagan.
+
+\subsubsection{Maximizar la cantidad de cláusulas que se satisfacen}
+
+Este criterio escoge la variable de la cláusula que aparezca en más cláusulas insatisfechas, dado que cambiar esta satisfacería
+dichas cláusulas.
 
 \subsection{Eficacia del algoritmo}
 
+\section{Contenidos preliminares.}
 
+\subsection{Problema de satisfacibilidad booleana. 3-SAT.}
+
+El problema SAT es el problema de saber si, dada una expresión booleana con variables y sin cuantificadores, 
+hay alguna asignación de valores para sus variables que hace que la expresión sea verdadera. El problema 3-SAT restringe 
+la expresión de entrada a Forma Normal Conjuntiva(CNF) con 3 variables por cláusula (3-CNF).
+
+\subsection{Algoritmo de Tseitin}
+
+Dada una fórmula $\phi $ identificamos todas las subfórmulas $\phi_i$ que la componen (subfórmulas entre dos variables a lo sumo) e introducimos una nueva variable 
+$y_i$ por cada una de estas. Luego reescribimos la fórmula original como la consecución de $and$ entre la la variable correspondiente
+a la subfórmula mayor y las clásulas de la forma: $ y_i \Leftrightarrow \phi_i$. Luego, cada una de estas cláusulas debe ser llevada
+a CNF, utilizando el algoritmo de transformación basado en el uso de la tabla verititativa, como cada cláusula tiene tres variables a lo sumo, su representación
+en FNC dada por este método es un expresión en con menos de tres variables por cláusula. Luego para conseguir que cada clásula $C_i$ tenga exactamente
+3 variables, se sigue el procedimiento:
+
+\bullet Si $C_i$ tiene 3 literales distintos, simplemente incluimos $C_i$ como una cláusula de la fórmula original.
+
+\bullet Si $C_i$ tiene 2 literales distintos, dígase $C_i = (l_1 \vee  l_2)$, entonces incluimos como cláusulas
+$(l_1\vee l_2\vee p)\wedge (l_1\vee l_2\vee \lnot p)$
+
+\bullet Si $C_i$ tiene soll un literal $l$, entonces incluimos las cláusulas 
+$(l\vee p\vee q)\wedge (l\vee p\vee \lnot q) \wedge (l\vee \lnot p \vee q)\wedge (l\vee \lnot p\vee \lnot q)$
 
 \end{document}
