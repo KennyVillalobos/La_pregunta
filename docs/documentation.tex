@@ -47,25 +47,32 @@ las posibles asignaciones de variables
 
 \subsection{Idea del Algoritmo}
 
-
-
-
+La idea de esta aproximaci\'on para encontrar una distribuci\'on de valores de las variables, que satisfagan la CNF es 
+mediante Backtrack, probar todas las posibles asignaciones de las variables y comprobar si alguna de ellas hace 
+que la CNF sea satisfacible. Si no existe tal distribuci\'on el algoritmo lo notifica.
 
 \subsection{Correctitud}
-
+Este algoritmo es correcto pues se comprueban todas las posibles asignaciones de las variables. Por tanto, si existe 
+una distribuci\'on de valores que hace que la CNF se satisfaga, el algoritmo la detecta. Tambi\'en detecta si no existe 
+forma de satisfacer la CNF.
 
 \subsection{Complejidad Temporal}
-
+Sea $n$ la cantidad de variables. Sea $c$ la cantidad de cl\'ausulas de la CNF. La cantidad de distribuciones de valores booleanos 
+de las variables de la CNF es $2^n$. Luego para 
+cada distribuci\'on se comprueba si satisface la CNF. La comprobaci\'on de satisfacibilidad tiene complejidad 
+$O(n*c)$ pues se recorren todas las variables de todas las cl\'ausulas asignando sus valores y evaluando las cl\'ausulas durante el recorrido y luego se 
+verifica el valor de las evaluciones de todas las cl\'ausulas en $O(c)$ la cnf durante el recorrido. Por tanto el algoritmo tiene complejidad $O(n*c*2^n)$
 
 
 \section{Reducción del Problema}
 
-Sea $A$ el problema que estamos tratando de resolver, y sea $B$$ el conocido problema NP-Completo 3-Sat.(Ver problema 3-Sat) Supongamos que tenemos un algoritmo $f$
+Sea $A$ el problema que estamos tratando de resolver, y sea $B$ el conocido problema NP-Completo 3-Sat.(Ver problema 3-Sat) Supongamos que tenemos un algoritmo $f$
 que soluciona $A$ en tiempo polinomial. Para toda instancia $\beta$ de $B$ podemos transformar esta en una instancia $\alpha $ de $A$, de forma que la solución
 de las instancias $\alpha $ de $A$ y $\beta $ de $B$ son la misma, es decir la respuesta de $\alpha $ es "si" si y solo si
 la respuesta de $\beta $ es si. Este procedimiento de reducción polinomial es tan sencillo como tomar para cada instancia $\beta $ de 3-Sat
 y convertirla a $\alpha $, siendo $\alpha  = \lnot $. Si el algoritmo $f$ retorna $True$, es porque existe una asignación de variables
 para $\alpha $ tal que está es $False$, luego para esta misma asignación de variables $lnot \beta  = False$, por lo cual $\beta  = True$
+
 \section{Algoritmo Walk-Sat}
 
 

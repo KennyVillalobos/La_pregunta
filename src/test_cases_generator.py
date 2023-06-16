@@ -32,6 +32,6 @@ def generator(num_clauses, num_var, cases_number):
                     cnf[clause].append(-var)
                 else: cnf[clause].append(var)
 
-        test_cases.append(cnf)
+        test_cases.append((cnf, vars))
 
     return test_cases
