@@ -2,7 +2,6 @@ import random
 
 def generator(num_clauses, num_var, cases_number):
     vars = [i for i in range(1, num_var + 1)]
-    used_vars = [False for i in vars]
     test_cases = []
 
     for i in range(cases_number):
@@ -11,7 +10,11 @@ def generator(num_clauses, num_var, cases_number):
 
         for var in vars:
             clause = random.choice(clauses_not_full)
-            cnf[clause].append(var)
+
+            if random.randint(0, 1):
+                cnf[clause].append(-var)
+            else: cnf[clause].append(var)
+
             if len(cnf[clause]) == 3:
                 clauses_not_full.remove(clause)
 
@@ -20,8 +23,15 @@ def generator(num_clauses, num_var, cases_number):
             vars_unused = [var for var in vars]
             
             for var in cnf[clause]:
-                vars_unused.remove(var)
+                vars_unused.remove(abs(var))
 
-            for
-            
-            
+            for term in range(missing_terms):
+                var = random.choice(vars_unused)
+                vars_unused.remove(var)
+                if random.randint(0, 1):
+                    cnf[clause].append(-var)
+                else: cnf[clause].append(var)
+
+        test_cases.append(cnf)
+
+    return test_cases
