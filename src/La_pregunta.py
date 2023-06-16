@@ -153,5 +153,5 @@ def step(clauses, variables, unsat_clauses, sat_clauses, use_greedy_parameter, g
             unsat_clauses.remove(i)
         sat_clauses[i] = sat
         
-print(walkSat([[1,2,3],[-1,-2,-3],[-1,2,3]],[False,False,False],50,1,0))
+#print(walkSat([[1,2,3],[-1,-2,-3],[-1,2,3]],[False,False,False],50,1,0))
     

@@ -1,12 +1,16 @@
-from sympy import symbols
-
-x,y = symbols('x,y')
-
-print((x & ~y).subs({x:True, y:True}))
+import sympy
+from sympy.logic.boolalg import to_cnf
 
 print("Format of the input\n")
-print("& = and, | = or, ~ = not, >> = Implies\n")
+print("& = and, | = or, ~ = not, >> = Implies, () = grouping\n")
 formula = input("Type your formula\n")
 
-formula = formula.split(" ")
+formula = sympy.parse_expr(formula)
+formula = str(to_cnf(formula))
+
+clauses = formula.split('&')
+
+
+
+print(formula)
 
