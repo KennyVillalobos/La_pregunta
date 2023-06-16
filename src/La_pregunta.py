@@ -1,6 +1,6 @@
 import random
 
-def backtrack(boolean_exp: list[list[int]]):
+def backtrack(boolean_exp):
     num_clauses = len(boolean_exp)
     vars_per_clause = len(boolean_exp[0])
 
@@ -52,7 +52,8 @@ def backtrack(boolean_exp: list[list[int]]):
     return result    
 
 
-
+#(greedy_criterion = 0) => Min of sat_clauses_for_var
+#(greedy_criterion = 1) => Max of unsat_clauses_with_var
 def walkSat(clauses, variables, number_of_steps, use_greedy_parameter, greedy_criterion):
     unsat_clauses_with_var = [0 for i in range(len(variables))]
     sat_clauses_for_var = [0 for i in range(len(variables))]
@@ -89,6 +90,9 @@ def variable_assigment(clauses, variables):
 def check_sat(clauses, variables, sat_clauses, unsat_clauses, unsat_clauses_with_var, sat_clauses_for_var):
     sat = 0
     unsat_clauses.clear()
+    for i in range(len(variables)):
+        unsat_clauses_with_var[i] = 0
+        sat_clauses_for_var[i] = 0
     for i in range(len(sat_clauses)):
         if sat_clauses[i]:
             sat = sat + 1
@@ -118,11 +122,12 @@ def check_sat(clauses, variables, sat_clauses, unsat_clauses, unsat_clauses_with
 def step(clauses, variables, unsat_clauses, sat_clauses, use_greedy_parameter, greedy_criterion, unsat_clauses_with_var, sat_clauses_for_var):
     clause = random.choice(unsat_clauses)
     p = random.randint(0,100) /100
-    
+    print(p)
     if p < use_greedy_parameter:
         var_index = abs(random.choice(clauses[clause]))
         
     else:
+        print('voy a usar un criterio greedy')
         if greedy_criterion == 0: # Min of sat_clauses_for_var
             var_index = 0
             number_of_clauses = len(clauses) + 1
@@ -144,9 +149,9 @@ def step(clauses, variables, unsat_clauses, sat_clauses, use_greedy_parameter, g
         sat = False
         for var in clauses[i]:
             if var<0:
-                sat = not variables[var-1]
+                sat = not variables[abs(var)-1]
             else:
-                sat = variables[var-1]
+                sat = variables[abs(var)-1]
             if sat:
                 break
         if not sat_clauses[i] and sat:

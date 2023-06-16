@@ -13,7 +13,7 @@
 
 \begin{document}
 %
-\title{Dise\~{n}o y An\'alisis de Algoritmos. Problema 2: El Zool\'ogico}
+\title{Dise\~{n}o y An\'alisis de Algoritmos. Problema 3: La Pregunta}
 %
 %\titlerunning{Abbreviated paper title}
 % If the paper title is too long for the running head, you can set
@@ -27,109 +27,55 @@
 %
 \section{Definici\'on del Problema}
 
-Se tiene un grafo dirigido de $n$ vértices, unidos por arcos ponderados. Se desea computar para cada par 
-de vértices $s$ y $t$ cuántos arcos pertenecen a algún camino de costo mínimo entre $s$ y $t$. La 
-representación computacional del grafo de entrada será una matriz de costos.
+Se tiene una expresión booleana y se quiere conocer si existe una asignación a las variables de esta, tal que la expresión se
+torne falsa.
 
 \section{Primera Aproximaci\'on}
 
+Dada la expresión brindada, sea esta $f$, si existe una asignación $s$ de las variables de $f$ tal que la expresión sea falsa,
+entonces dicha asignación hace verdadera la expresión $\lnot f$, por lo que el problema de encontrar una asignación de variables que
+hagan falsa $f$ sea soluciona hallando una asignación de variables que satifaga $\lnot f$. Para verificar la satisfacibilidad de
+la fórmula $f$ es más sencillo trabajar sobre una fórmula en CNF, por lo cual hacemos la transformación de $f$ a $f'$, siendo $f'$
+una fórmula en CNF equisatisfacible con $f$. Para esta transformación utilizamos el algoritmo Tseitin, que nos garantiza que dicha
+transformación se desarrolla en tiempo polinomial, y con un crecimiento de la fórmula polinomial con respecto al tamaño de la
+fórmula original.(Ver algoritmo de Tseitin en ...)
+
+En este punto buscamos una asignación de variables tal que la fórmula $f'$ quede satisfecha, por tanto, procedemos a verificar todas
+las posibles asignaciones de variables
+
+
+
 \subsection{Idea del Algoritmo}
 
-Se le realiza al algoritmo de Dijkstra la siguiente modificaci\'on: Sea $d[u]$ el costo de llegar desde origen hasta el v\'ertice $u$.   
-En cada nodo, en vez de guardar un padre, se guarda una lista de padres, de forma tal que  
-cuando se haga $relax(u, v)$, si el costo 
-computado hasta el momento de llegar a $v$  desde el origen $d[v]$, es igual al costo de ir del origen a $u$ $d[u]$ m\'as 
-el costo del arco $(u,v)$ entonces a\~{n}adimos a la lista de padres de $v$ el v\'ertice $u$. Mediante estas listas de padres
-podemos reconstruir todos los caminos de costo m\'inimo que llegan a $u$. Se tendr\'a una matriz \textbf{$solution$}
-donde en la posici\'on $(i,j)$ almacenar\'a el conteo de la cantidad de caminos de costo m\'inimo entre el nodo $i$ y el nodo $j$. Por cada 
-v\'ertice del grafo se efect\'ua el algoritmo de Dijkstra con la modificaci\'on anteriormente explicada. 
-Cada vez que se termine una ejecuci\'on de Dijkstra para el origen de turno, llamemosle $u$, para cada par $(u, v)$ se recorren todos los caminos 
-de costo m\'inimo encontrados y se cuentan todas los arcos que participan en dichos caminos, los arcos se 
-contaran solo una vez, pues a medida que se recorren los caminos se ir\'a marcando en una matriz booleana los arcos ya contados. Por cada arco no marcado 
-que se visite se aumenta en 1 el valor de \textbf{$solution[u, v]$}. 
-Luego de esto se tendr\'an 
-computados la cantidad de aristas que participan en caminos de costo m\'inimo para los pares donde 
-origen de los caminos sea $u$, pares $(u,v)$, donde v es un v\'ertice del grafo distinto de $u$. Repitiendo este proceso para cada uno de los v\'ertices del grafo 
-en \textbf{$solution$} estar\'a almacenada la respuesta deseada.
+
+
+
 
 \subsection{Correctitud}
 
-La modificaci\'on realizada a la operaci\'on relax que efect\'ua Dijkstra no afecta la correctitud 
-del algoritmo, pues no se modifica su comportamiento, solo agregamos informaci\'on a los nodos. Luego 
-podemos afirmar que se calculan correctamente los caminos de costo m\'inimo desde el or\'igen de turno 
-hacia el resto de los nodos. Luego, el algoritmo calcula todos las caminos de costo m\'inimo entre cada 
-par de nodos y cuenta los arcos que intervienen en los caminos una sola vez. 
 
 \subsection{Complejidad Temporal}
 
-La modificaci\'on hecha al algoritmo de Dijkstra no afecta su complejidad temporal, solo se agregan operaciones de complejidad 
-constante a la operaci\'on relax.
-La modalidad de Dijkstra utilizada tiene complejidad $O(|V|^2)$. Luego reconstruir todos los caminos de costo m\'inimo 
-entre un par de v\'ertices es $O(E)$. En cada iteraci\'on del algoritmo se ejecuta una vez el algoritmo 
-de Dijkstra y luego por cada uno de los $|V| - 1$ pares a analizar en la iteraci\'on se reconstruyen sus 
-caminos de costo m\'inimo, luego el costo de contar todos los caminos de costo m\'inimo entre los $|V| - 1$
-pares es $O((|V|-1)|E|)$ = $O(|V||E|)$ = $O(|V|^3)$. Luego el coste de una iteraci\'on es $O(|V|^2 + |V|^3)$. 
-El algoritmo realiza $|V|$ iteraciones. Por tanto la complejidad temporal del algoritmo es $O(|V|*(|V|^2 + |V|^3))$, 
-que es $O(|V|^4)$
 
-\section{Segunda Solución}
+
+\section{Reducción del Problema}
+
+Sea $A$ el problema que estamos tratando de resolver, y sea $B$$ el conocido problema NP-Completo 3-Sat.(Ver problema 3-Sat) Supongamos que tenemos un algoritmo $f$
+que soluciona $A$ en tiempo polinomial. Para toda instancia $\beta$ de $B$ podemos transformar esta en una instancia $\alpha $ de $A$, de forma que la solución
+de las instancias $\alpha $ de $A$ y $\beta $ de $B$ son la misma, es decir la respuesta de $\alpha $ es "si" si y solo si
+la respuesta de $\beta $ es si. Este procedimiento de reducción polinomial es tan sencillo como tomar para cada instancia $\beta $ de 3-Sat
+y convertirla a $\alpha $, siendo $\alpha  = \lnot $. Si el algoritmo $f$ retorna $True$, es porque existe una asignación de variables
+para $\alpha $ tal que está es $False$, luego para esta misma asignación de variables $lnot \beta  = False$, por lo cual $\beta  = True$
+\section{Algoritmo Walk-Sat}
+
+
 
 \subsection{Idea del algoritmo}
 
-Realizamos el algoritmo de Floyd-Warshall a partir de la matriz de costos inicial (cost) para obtener la matriz de las distancias de costo mínimo entre todo par de vértices $(i,j)$, llamemos a esta matriz $fw$.
-Luego, para cada par de vértices $(v_i,v_j)$, con $i \neq j$, hallamos todos los vértices $v_k$, tal que $fw[i,j] = fw[i,k] + fw[k,j]$, estos vértices pertencen a algún
-camino de costo mínimo de $i$ a $j$, al conjunto de estos vértices para cada par $(i,j)$ llamémoslo $CCM_(i,j)$. Luego, para cada par de vértices $(v_i,v_j)$, con $i \neq j$, hallamos el número de vértices $v_p$ que cumplen que:
-$fw[i,p] + dist[p,j] = fw[i,j]$, esta es la cantidad de aristas que llegan a $j$, pertenecientes a algún camino de costo mínimo proveniente de $i$, llamemos a este número $e_(i,j)$.
-Luego hacemos un recorrido por cada par de vértices $(v_i,v_j)$ la cantidad de aristas que pertenecen a algún camino de costo mínimo de $i$ a $j$ es igual a la suma de las aristas que llegan a cada vértice $k$ perteneciente a $CCM_(i,j)$ en caminos de costo
-mínimo provenientes de $i$:
+\subsection{Criterios greedy}
 
-$S_(v_i,v_j) = \sum e_(i,k), \forall k\in CCM_(i,j) $
+\subsection{Eficacia del algoritmo}
 
-\subsection{Correctitud}
-Primero demostremos que si una arista pertenece a algún camino de costo mínimo entre $i$ y $j$, el algoritmo la cuenta:
-
-Si una arista $(x,y)$ pertence a algún camino de costo mínimo entre $i$ y $j$, entonces: $y$ es un vértice que pertence a algún camino de costo mínimo entre $i$ y $j$ y se cumple que: 
-el costo mínimo de un camino de $i$ a $y$ sumado con el costo de un camino de costo mínimo de $y$ a $j$ es igual al costo de algún camino de costo mínimo de $i$ a $j$.
-
-Demostremos el enunciado anterior:
-
-El algoritmo de Floyd-Warshall calcula correctamente el costo del camino de costo m\'inimo entre todo par de v\'ertices $(i,j)$. 
-Sea $fw$ la matriz que devuelve el algoritmo de Floyd-Warshall. Todos los caminos de costo m\'inimo tienen el mismo costo por definici\'on 
-de camino de costo m\'inimo. Sea $P$ alg\'un camino de costo m\'inimo entre $i$ y $j$ en el cual participe el v\'ertice $y$. Los caminos de costo 
-m\'inimo poseen subestructura \'optima, es decir, para cualquier par de v\'ertices $(v,w) \in P$, el subcamino de $P$ que va de $v$ a $w$ es un camino de costo 
-m\'inimo entre $v$ y $w$. Por tanto el subcamino de $P$ de $i$ a $y$ es un camino de costo m\'inimo, luego el costo de dicho subcamino est\'a almacenado en $fw[i,y]$. 
-An\'alogamente se cumple para el subcamino de $P$ que va de $y$ a $j$ y su valor est\'a almacenado en $fw[y,j]$. Por tanto, $fw[i,y]$ es el costo 
-del camino de costo m\'inimo que va de $i$ a $y$, $f[y,j]$ es el costo del camino de costo m\'inimo que va de $y$ a $j$. Luego como $f[i,y]$ es m\'inimo y 
-$f[y,j]$ es m\'inimo, su suma es m\'inima, es decir, $fw[i,y] + fw[y,j]$ es m\'inima. El costo del camino de costo m\'inimo entre $i$ y $j$ es $fw[i,j]$  y coincide con el costo de $P$. 
-Luego en $P$ se empieza en $i$, se pasa por $y$ y luego se va a $j$, por tanto el costo de $P$ es $fw[i,y] + fw[y,j]$ y como $P$ es de costo m\'inimo entonces 
-$fw[i,j] = fw[i,y] + fw[y,j]$, con $y \in P$. Luego queda demostrado que si $y$ es un vértice que pertence a algún camino de costo mínimo entre $i$ y $j$ se cumple que: 
-el costo mínimo de un camino de $i$ a $y$ sumado con el costo de un camino de costo mínimo de $y$ a $j$ es igual al costo de algún camino de costo mínimo de $i$ a $j$. 
-
-Luego, si $(x,y)$ pertenece a algún camino de costo mínimo entre $i$ y $j$, $x,y$ pertenece a algún camino de costo mínimo entre $i$ y $y$, pues todo subcamino de un camino de costo mínimo es de costo mínimo.
-Finalmente si $(x,y)$ pertenece a algún camino de costo mínimo entre $i$ y $y$, entonces se cumple que la suma del costo de la arista $(x,y)$ con el costo de un camino de costo mínimo de $i$ a $x$ debe ser igual
-al costo de un camino de costo mínimo de $i$ a $y$. 
-
-Por lo cual: $ y \in CCM_(i,j) \land (x,y) \in e_(i,y)$, y por lo tanto el algoritmo cuenta a $(x,y)$
-
-Ahora demostremos que si el algoritmo cuenta una arista, esta pertence a algún camino de costo mínimo ente $i$ y $j$:
-
-Sea $(p,j)$ una arista, si el algoritmo la cuenta, entonces esta arista cumple para alg\'un vértice $i$, tal que exista al menos un camino de $i$ a $j$, que 
-$fw[i,p] + cost[p,j] = fw[i,j]$, esto significa que el camino que empieza en $i$ pasa por $p$ y luega va a $j$ es un camino de costo m\'inimo de $i$ a $j$, 
-pues su costo es $fw[i,p] + cost[p,j]$ el cual coincide con el costo del camino de costo m\'inimo computado por el algoritmo de Floyd-Warshal,$fw[i,j]$. Luego 
-la arista $(p,j)$ participa en un camino de costo m\'inimo entre $i$ y $j$.
-
-Por \'ultimo el algoritmo cuenta las aristas que pertenecen a caminos de costo m\'inimo entre $i$ y $j$ una sola vez pues el algoritmo cuenta las aristas 
-que llegan a un v\'ertice y no revisa un v\'ertice dos veces.
-
-
-\subsection{Complejidad Temporal}
-
-El algoritmo genera la matriz de los costos caminos de costo mínimo para todos los pares de vértices $(v_i,v_j)$ utilizando el algoritmo
-de Floyd-Warshall, este tiene una complejidad temporal $O(|V|^3)$, luego por cada elemento de la matriz, o sea, par de vértices, (excepto los pares $(i,j)$, con $i=j$)
-el algoritmo recorre todos los vértices del grafo (excepto $i$), para reconocer cuales vértices pertenecen a caminos de costo mínimo entre $i$ y $j$ y cuántas aristas de la forma $(k,j)$ pertenecen
- a caminos de costo mínimo de $i$ a $j$, esta comprobación sucede en tiempo constante $c$, por lo cual este procedimiento tiene una complejidad temporal $O(|V|^3)$. Luego, para cada par de vértices $(i,j)$ se recorren los vértices previamente calculados
- que pertenecen a caminos de costo mínimo de $i$ a $j$ (a lo sumo $|V|-1$) y se suma el número de aristas que llegan a cada uno de esos vértices pertenecientes a caminos de costo mínimo provenientes de $i$, este procedimiento tiene una complejidad temporal $O(|V|^3)$.
- Por tanto la complejidad temporal del algoritmo es $O(3*|V|^3)$, que es $O(|V|^3)$.
 
 
 \end{document}
