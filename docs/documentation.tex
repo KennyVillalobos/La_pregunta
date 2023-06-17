@@ -78,19 +78,23 @@ para $\alpha $ tal que está es $False$, luego para esta misma asignación de va
 
 \section{Utilización del algoritmo Walk-Sat}
 
-Walk-Sat es un algoritmo estocástico de búsqueda local(focused search) ...breve explicacion de xq usar walksat...
-
-Para llevar una instancia de nuestro problema a una instancia de Walk-Sat utilizamos la transformación de Tseitin, dado que esta
+Walk-Sat es un algoritmo estocástico de búsqueda local(focused search algorithm), en los algoritmos de búsqueda local o enfocada, se elige la nueva 
+variable al azar entre las variables que aparecen en las cláusulas violadas, con una probabilidad $1-p$, mientras que con una probabilidad $p$
+ se escoge basado en un criterio greedy. Es uno de los algoritmos más estudiados para solucionar problemas SAT sobre CNF.
+Para llevar una instancia de nuestro problema a una instancia de 3-SAT y utilizar Walk-Sat en timempo polinomial tomamos la fórmula original 
+$f$ y la negamos, siendo $f' = \lnot f$, y utilizamos la transformación de Tseitin sobre $f'$, obteniendo una fórmula $f''$ dado que esta
 nos permite llevar una expresión booleana a 3-CNF en tiempo polinomial y con un crecimiento de la fórmula polinomial con
-respecto al tamaño de la fórmula original.
+respecto al tamaño de la fórmula original. Luego resolver 3-SAT sobre la fórmula $f''$ implica encontrar que existe una asignación de
+variables que satisface la fórmula $f'$, que significa que existe una asignación de variables para la cual $f$ toma valor $False$.
 
 \subsection{Idea del algoritmo}
 
 Comienza asignando un valor aleatorio a cada variable de la fórmula. Si la asignación satisface todas las cláusulas, 
 el algoritmo termina devolviendo la asignación. De lo contrario, se invierte una variable seleccionada bajo un criterio de
-una cláusula insatisfecha elegida aleatoriamente y se repite lo anterior hasta que todas las cláusulas estén satisfechas. 
-El algoritmo puede utilizar diferentes criterios, puede seleccionar una variable de la cláusula de forma aleatoria, o bien 
-puede seguir un criterio greedy de los implementados para seleccionar la variable.
+una cláusula insatisfecha elegida aleatoriamente y se repite lo anterior hasta que todas las cláusulas estén satisfechas o se llegue a
+un límite establecido de número de iteraciones, para el cual se da como aproximación a la solución la distribución hallada hasta ese punto 
+y el número de cláusulas insatisfechas. El algoritmo puede utilizar diferentes criterios, puede seleccionar una variable de la cláusula de 
+forma aleatoria (RandomWalkSAT), o bien puede seguir un criterio greedy de los implementados para seleccionar la variable.
 
 \subsection{Criterios greedy}
 
@@ -105,6 +109,24 @@ Este criterio escoge la variable de la cláusula que aparezca en más cláusulas
 dichas cláusulas.
 
 \subsection{Eficacia del algoritmo}
+
+Christos H. Papadimitriou en "On selecting a satisfying truth assignment", Papadimitriou demostró que RandomWalkSAT 
+resuelve con alta probabilidad cualquier instancia satisfactible del conjunto aleatorio 2-SAT, en un número de 
+pasos $T = O(N^2)$. Además, Uwe Schöning en "A probabilistic algorithm for k-sat based on limited local
+search and restart" demostró que: sea $R$ el número de reinicios del algoritmo RandomWalkSAT, cada vez con una condición 
+inicial dibujada uniformemente al azar. Sea $T = 3N$ el número de variables volteadas de cada reinicio. Si ninguna de 
+las R ejecuciones sucesivas de RandomWalkSAT en la instancia F ha proporcionado una solución, entonces la probabilidad 
+de que F sea satisfactible es menor que $e − (3/4)NR$. Por lo tanto, después de muchos reinicios $R > (4/3)N$, si hay soluciones, 
+la probabilidad de que RandomWalkSAT no haya encontrado ninguna de ellas es muy baja. Otros estudios sobre algoritmo como 
+"Solving satisfiability problems by fluctuations: The dynamics of stochastic local search algorithms"(Wolfgang Barthel, 
+Alexander K. Hartmann, and Martin Weigt), referencian que el tiempo de ejecución depende en gran medida de la relación 
+$\alpha = M/N$, con $M$ siendo el número de cláusulas y $N$ el número de variables, para valores pequeños de $\alpha $, en el  
+algoritmo RandomWalkSAT, negar una variable en una cláusula insatisfecha raramente hace que otras cláusulas se vuelvan insatisfechas. 
+Hasta un umbral crítico $\alpha_d \simeq  2.7$ se encuentra una solución en un tiempo mediano que crece linealmente con N, por encima de este 
+punto los tiempos de ejecución crecen exponencialmente. Si elegimos una heurística mejor que tenga un número de equilibrio menor de cláusulas insatisfechas, 
+al introducir una fracción $q > 0$ de pasos greedy, el umbral dinámico en sí cambia ligeramente y tiene un máximo en $q \simeq  0.85$. Para fórmulas de hasta 
+$\alpha  \simeq  2.8$ se pueden resolver en tiempo lineal.
+
 
 \section{Contenidos preliminares.}
 
